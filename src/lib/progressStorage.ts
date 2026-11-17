@@ -34,8 +34,16 @@ export const progressStorage = {
   getItem: (key: string) =>
     safe(() => {
       const v = pick().getItem(key);
-      // A guest who used CodeVerse before sign-in was required keeps their data for this tab.
-      if (v === null && !savesProgress()) return localStorage.getItem(key);
+      // Someone who used CodeVerse before sign-in was required: move their old data into this
+      // tab only, so it can be kept by signing in but is no longer saved permanently as a guest.
+      if (v === null && !savesProgress()) {
+        const legacy = localStorage.getItem(key);
+        if (legacy !== null) {
+          sessionStorage.setItem(key, legacy);
+          localStorage.removeItem(key);
+        }
+        return legacy;
+      }
       return v;
     }, null),
   setItem: (key: string, value: string) => safe(() => pick().setItem(key, value), undefined),

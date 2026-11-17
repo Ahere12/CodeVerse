@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CheckCircle2, Circle, Eye, Lightbulb, Loader2, Play, RotateCcw, XCircle } from 'lucide-react';
+import { Bot, CheckCircle2, Circle, Eye, Lightbulb, Loader2, Play, RotateCcw, XCircle } from 'lucide-react';
 import type { Block } from '../../content/types';
 import { inline, Markdown } from '../../lib/markdown';
 import { CodeEditor } from '../code/CodeEditor';
@@ -8,6 +8,8 @@ import { grade, type GradeResult } from '../../runtime/checks';
 import { useAppStore } from '../../store/useAppStore';
 import { Console } from './Console';
 import { useCodeTheme } from '../../lib/hooks';
+import { useTutor } from '../../store/useTutor';
+import { cloudConfigured } from '../../lib/supabase';
 
 type ExerciseBlock = Extract<Block, { type: 'exercise' }>;
 
@@ -20,6 +22,13 @@ export function Exercise({ block }: { block: ExerciseBlock }) {
   const saveDraft = useAppStore((s) => s.saveDraft);
   const record = useAppStore((s) => s.recordExercise);
   const codeTheme = useCodeTheme();
+  const openTutor = useTutor((s) => s.openWith);
+  const exerciseContext = () => {
+    const checks = result
+      ? '\n\nCheck results:\n' + result.outcomes.map((o) => `${o.ok ? 'PASS' : 'FAIL'} ${o.desc}${o.detail ? ` (${o.detail})` : ''}`).join('\n') + (result.problem ? `\nProblem: ${result.problem}` : '')
+      : '';
+    return `Task (${block.lang}):\n${block.prompt}\n\nMy code:\n${code}${checks}\n\nPlease don't give me the full solution.`;
+  };
 
   const [code, setCode] = useState(draft ?? block.starter);
   const [result, setResult] = useState<GradeResult | null>(null);
@@ -92,6 +101,19 @@ export function Exercise({ block }: { block: ExerciseBlock }) {
         )}
         {(fails >= REVEAL_AFTER || status?.revealed) && code !== block.solution && (
           <button className="btn btn-ghost btn-sm" onClick={reveal}><Eye size={14} /> Show solution</button>
+        )}
+        {cloudConfigured && (
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={() =>
+              openTutor({
+                mode: result && !result.passed ? 'bug' : 'hint',
+                context: { title: `Exercise: ${block.title}`, details: exerciseContext() },
+              })
+            }
+          >
+            <Bot size={14} /> Ask tutor
+          </button>
         )}
         <button className="btn btn-ghost btn-sm" onClick={() => { setCode(block.starter); setResult(null); }} title="Restore the starting code">
           <RotateCcw size={14} /> Reset

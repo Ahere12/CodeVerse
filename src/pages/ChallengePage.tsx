@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Eye, Lightbulb, Loader2, Play, RotateCcw, Send, Timer, XCircle } from 'lucide-react';
+import { ArrowLeft, Bot, CheckCircle2, Eye, Lightbulb, Loader2, Play, RotateCcw, Send, Timer, XCircle } from 'lucide-react';
 import { CATEGORY_LABEL, CHALLENGE_XP, getChallenge, type Challenge } from '../content/challenges';
 import { gradeChallenge, type ChallengeResult } from '../runtime/gradeChallenge';
 import { preloadPython } from '../runtime/pyRunner';
@@ -12,6 +12,8 @@ import { useCodeTheme } from '../lib/hooks';
 import { useAppStore } from '../store/useAppStore';
 import { useToasts } from '../store/useToasts';
 import { NotFound } from './NotFound';
+import { useTutor } from '../store/useTutor';
+import { cloudConfigured } from '../lib/supabase';
 
 const fmt = (ms: number) => `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
 
@@ -30,6 +32,13 @@ function ChallengeView({ ch }: { ch: Challenge }) {
   const setLastVisited = useAppStore((s) => s.setLastVisited);
   const push = useToasts((s) => s.push);
   const codeTheme = useCodeTheme();
+  const openTutor = useTutor((s) => s.openWith);
+  const challengeContext = () => {
+    const tests = grade
+      ? '\n\nTest results:\n' + grade.cases.map((c) => `${c.ok ? 'PASS' : 'FAIL'} ${c.hidden ? '(hidden test)' : `${c.label} expected ${c.expected}${c.ok ? '' : ` got ${c.actual ?? c.error}`}`}`).join('\n')
+      : '';
+    return `Problem (${ch.lang}):\n${ch.description}\n\nMy code:\n${code}${tests}\n\nPlease don't give me the full solution.`;
+  };
 
   const [code, setCode] = useState(savedDraft ?? ch.starter);
   const [grade, setGrade] = useState<ChallengeResult | null>(null);
@@ -127,6 +136,19 @@ function ChallengeView({ ch }: { ch: Challenge }) {
             <Timer size={14} /> {timerStart !== null ? <span className="mono" style={{ color: overTime ? 'var(--warning)' : undefined }}>{fmt(elapsed)} / {ch.minutes}:00</span> : 'Timed mode'}
           </button>
           <span className="spacer" />
+          {cloudConfigured && (
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={() =>
+                openTutor({
+                  mode: grade && !grade.passed ? 'bug' : 'hint',
+                  context: { title: `Challenge: ${ch.title}`, details: challengeContext() },
+                })
+              }
+            >
+              <Bot size={14} /> Ask tutor
+            </button>
+          )}
           <button className="btn btn-ghost btn-sm" onClick={() => { if (window.confirm('Reset to the starting code?')) { setCode(ch.starter); setGrade(null); } }}><RotateCcw size={14} /> Reset</button>
           {ch.lang !== 'sql' && (
             <button className="btn btn-sm" onClick={() => go(false)} disabled={!!busy} title="Run the visible tests (Ctrl+Enter)">

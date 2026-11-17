@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Menu, PanelLeftClose, PanelLeftOpen, Search, X } from 'lucide-react';
+import { Bot, Menu, PanelLeftClose, PanelLeftOpen, Search, X } from 'lucide-react';
 import { NAV } from '../../lib/nav';
 import { useAppStore } from '../../store/useAppStore';
 import { useToasts } from '../../store/useToasts';
@@ -11,6 +11,9 @@ import { cloudConfigured } from '../../lib/supabase';
 import { CommandPalette } from './CommandPalette';
 import { LogoMark } from '../ui/Logo';
 import { GuestBanner } from './GuestBanner';
+import { useTutor } from '../../store/useTutor';
+
+const TutorPanel = lazy(() => import('../tutor/TutorPanel'));
 
 export function AppShell() {
   useApplyPreferences();
@@ -20,6 +23,8 @@ export function AppShell() {
   const user = useAuth((s) => s.user);
   const syncState = useAuth((s) => s.sync);
   const profile = profileOf(user);
+  const tutorOpen = useTutor((s) => s.open);
+  const openTutor = useTutor((s) => s.openWith);
 
   const collapsed = useAppStore((s) => s.prefs.sidebarCollapsed);
   const updatePrefs = useAppStore((s) => s.updatePrefs);
@@ -112,6 +117,11 @@ export function AppShell() {
             <kbd>Ctrl K</kbd>
           </button>
           <div className="spacer" />
+          {cloudConfigured && (
+            <button className="btn btn-sm" onClick={() => openTutor()} aria-label="Open AI tutor" title="AI tutor">
+              <Bot size={15} /> <span className="xp-text">Ask AI</span>
+            </button>
+          )}
           <NavLink to="/profile" className="topbar-xp" title={`${intoLevel} / ${levelSize} XP to level ${level + 1}`}>
             <span className="level-chip" aria-label={`Level ${level}`}>{level}</span>
             <span className="xp-text mono">{xp.toLocaleString()} XP</span>
@@ -136,6 +146,11 @@ export function AppShell() {
       </div>
 
       {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} />}
+      {tutorOpen && (
+        <Suspense fallback={null}>
+          <TutorPanel />
+        </Suspense>
+      )}
       <Toasts />
     </div>
   );
