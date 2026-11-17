@@ -40,6 +40,14 @@ src/
   pages/         one file per route
 ```
 
+## Accounts and saving
+
+Progress is **only saved for signed-in learners**. Guests can use everything, but their progress lives in the browser tab (sessionStorage) and is merged into their account if they sign in. Signing out clears the device. See `src/lib/progressStorage.ts`.
+
+## Brand
+
+Logo files are in `public/brand/`: the mark (light and dark), the full logo (light and dark), and an app icon. The in-app logo is `src/components/ui/Logo.tsx`.
+
 ## Design styles
 
 Learners choose one of three designs during first-run setup or in **Settings → Appearance**, each with light and dark modes:
@@ -90,7 +98,7 @@ Exercise checks:
 | 2 | Design system, shell, navigation, dashboard, settings | Done |
 | 3 | Lessons, courses, placement quiz, notes, bookmarks, certificates | Done: 5 courses, 23 lessons, 23 graded exercises |
 | 4 | Playground, Python and SQL runtimes, multi-file editor, challenges; plus 3 design styles, language logos, curated videos, Supabase accounts and sync | **Done** |
-| 5 | AI tutor via a Supabase Edge Function proxy (API key server-side only) | Next: needs an AI API key (paid) |
-| 6 | Projects, roadmaps, expanded achievements | Planned |
+| 5 | AI tutor via a Supabase Edge Function (API key server-side only, signed-in users, daily limit) | **Built**: switch on with [SETUP-AI-TUTOR.md](SETUP-AI-TUTOR.md) |
+| 6 | 11 career roadmaps, 7 guided projects, more achievements | **Done** |
 | 7 | Docs centre, dev tools, community (needs accounts + DB) | Planned |
 | 8 | Testing, accessibility, performance pass | Planned |
