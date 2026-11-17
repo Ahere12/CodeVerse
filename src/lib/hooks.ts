@@ -66,17 +66,18 @@ export function useAchievementWatcher() {
   const notify = useAppStore((s) => s.prefs.notifyAchievements);
   const completedLessons = useAppStore((s) => s.completedLessons);
   const challenges = useAppStore((s) => s.challenges);
+  const guided = useAppStore((s) => s.guided);
   const unlocked = useAppStore((s) => s.achievements);
   const unlock = useAppStore((s) => s.unlockAchievements);
   const push = useToasts((s) => s.push);
 
   useEffect(() => {
-    const ctx = { xp, activity, onboarded, preferredLanguages, completedLessons, challenges };
+    const ctx = { xp, activity, onboarded, preferredLanguages, completedLessons, challenges, guided };
     const fresh = ACHIEVEMENTS.filter((a) => !unlocked[a.id] && a.check(ctx));
     if (!fresh.length) return;
     unlock(fresh.map((a) => a.id));
     if (notify) fresh.forEach((a) => push({ title: `Achievement unlocked: ${a.title}`, body: a.description, tone: 'good' }));
-  }, [xp, activity, onboarded, preferredLanguages, completedLessons, challenges, notify, unlocked, unlock, push]);
+  }, [xp, activity, onboarded, preferredLanguages, completedLessons, challenges, guided, notify, unlocked, unlock, push]);
 }
 
 /** Editor colour scheme override: undefined means "match the app theme". */

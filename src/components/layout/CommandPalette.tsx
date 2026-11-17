@@ -6,6 +6,8 @@ import { LANGUAGES } from '../../data/languages';
 import { GLOSSARY } from '../../data/glossary';
 import { ALL_LESSONS, COURSES, lessonPath } from '../../content';
 import { CHALLENGES } from '../../content/challenges';
+import { ROADMAPS } from '../../content/roadmaps';
+import { GUIDED_PROJECTS } from '../../content/guidedProjects';
 
 interface Result {
   id: string;
@@ -20,6 +22,8 @@ function buildIndex(): Result[] {
   return [
     ...ALL_NAV_ITEMS.map((n) => ({ id: `nav:${n.to}`, section: 'Pages', title: n.label, hint: n.description, to: n.to })),
     ...COURSES.map((c) => ({ id: `course:${c.id}`, section: 'Courses', title: c.title, hint: c.description, to: `/courses/${c.id}` })),
+    ...ROADMAPS.map((r) => ({ id: `rm:${r.id}`, section: 'Roadmaps', title: r.title, hint: r.summary, to: `/roadmaps/${r.id}` })),
+    ...GUIDED_PROJECTS.map((p) => ({ id: `gp:${p.id}`, section: 'Projects', title: p.title, hint: p.summary, to: `/projects/${p.id}` })),
     ...CHALLENGES.map((c) => ({ id: `ch:${c.id}`, section: 'Challenges', title: c.title, hint: `${c.lang} · ${c.difficulty}`, to: `/challenges/${c.id}` })),
     ...ALL_LESSONS.map(({ course, lesson }) => ({ id: `lesson:${lesson.id}`, section: 'Lessons', title: lesson.title, hint: `${course.title} · ${lesson.goal}`, to: lessonPath(course.id, lesson.id) })),
     ...LANGUAGES.map((l) => ({ id: `lang:${l.id}`, section: 'Languages', title: l.name, hint: l.tagline, to: `/languages/${l.id}` })),

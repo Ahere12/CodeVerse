@@ -49,6 +49,13 @@ export interface Project {
   updatedAt: number;
 }
 
+export interface GuidedProgress {
+  steps: number[];
+  playgroundId?: string;
+  startedAt: number;
+  completedAt?: number;
+}
+
 export interface ChallengeResult {
   solvedAt?: number;
   attempts: number;
@@ -83,6 +90,10 @@ interface AppState {
   placement: PlacementResult | null;
   challenges: Record<string, ChallengeResult>;
   projects: Record<string, Project>;
+  /** `${roadmapId}/${milestoneId}` → when the learner ticked it off. */
+  roadmapChecks: Record<string, number>;
+  /** Guided project id → completed step indexes and the playground copy. */
+  guided: Record<string, GuidedProgress>;
 
   updatePrefs: (patch: Partial<Preferences>) => void;
   togglePreferredLanguage: (id: string) => void;
@@ -101,6 +112,8 @@ interface AppState {
   /** Records an attempt; returns true the first time a challenge is solved. */
   recordChallenge: (id: string, solved: boolean, xp: number, ms?: number) => boolean;
   saveProject: (p: Project) => void;
+  toggleRoadmapCheck: (key: string) => void;
+  setGuided: (id: string, patch: Partial<GuidedProgress>) => void;
   deleteProject: (id: string) => void;
   /** Replaces all synced data (used by cloud sync after merging). */
   applySynced: (data: Partial<AppState>) => void;
@@ -138,7 +151,7 @@ export const STORAGE_KEY = 'codeverse:state';
 /** Everything that is saved locally, exported, and synced to the cloud. */
 export const SYNC_KEYS = [
   'prefs', 'xp', 'activity', 'lastVisited', 'onboarded', 'achievements', 'completedLessons',
-  'exercises', 'drafts', 'bookmarks', 'notes', 'placement', 'challenges', 'projects',
+  'exercises', 'drafts', 'bookmarks', 'notes', 'placement', 'challenges', 'projects', 'roadmapChecks', 'guided',
 ] as const;
 
 export type SyncedSlice = Pick<AppState, (typeof SYNC_KEYS)[number]>;
@@ -164,6 +177,8 @@ export const useAppStore = create<AppState>()(
       placement: null,
       challenges: {},
       projects: {},
+      roadmapChecks: {},
+      guided: {},
 
       updatePrefs: (patch) => set((s) => ({ prefs: { ...s.prefs, ...patch } })),
 
@@ -252,6 +267,20 @@ export const useAppStore = create<AppState>()(
 
       saveProject: (p) => set((s) => ({ projects: { ...s.projects, [p.id]: { ...p, updatedAt: Date.now() } } })),
 
+      toggleRoadmapCheck: (key) =>
+        set((s) => {
+          const next = { ...s.roadmapChecks };
+          if (next[key]) delete next[key];
+          else next[key] = Date.now();
+          return { roadmapChecks: next };
+        }),
+
+      setGuided: (id, patch) =>
+        set((s) => {
+          const prev = s.guided[id] ?? { steps: [], startedAt: Date.now() };
+          return { guided: { ...s.guided, [id]: { ...prev, ...patch } } };
+        }),
+
       deleteProject: (id) =>
         set((s) => {
           const projects = { ...s.projects };
@@ -266,7 +295,7 @@ export const useAppStore = create<AppState>()(
         set({
           prefs: { ...DEFAULT_PREFS, designStyle, theme, fontScale, reducedMotion },
           xp: 0, activity: {}, lastVisited: null, onboarded: false, achievements: {}, completedLessons: {},
-          exercises: {}, drafts: {}, bookmarks: [], notes: {}, placement: null, challenges: {}, projects: {},
+          exercises: {}, drafts: {}, bookmarks: [], notes: {}, placement: null, challenges: {}, projects: {}, roadmapChecks: {}, guided: {},
         });
         progressStorage.clearAll(STORAGE_KEY);
       },
@@ -296,6 +325,8 @@ export const useAppStore = create<AppState>()(
             placement: data.placement ?? null,
             challenges: data.challenges ?? {},
             projects: data.projects ?? {},
+            roadmapChecks: data.roadmapChecks ?? {},
+            guided: data.guided ?? {},
           });
           return { ok: true };
         } catch {

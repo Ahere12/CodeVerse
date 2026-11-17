@@ -4,7 +4,7 @@ import { AchievementBadge } from '../components/ui/bits';
 
 export function Achievements() {
   const s = useAppStore();
-  const ctx = { xp: s.xp, activity: s.activity, onboarded: s.onboarded, preferredLanguages: s.prefs.preferredLanguages, completedLessons: s.completedLessons, challenges: s.challenges };
+  const ctx = { xp: s.xp, activity: s.activity, onboarded: s.onboarded, preferredLanguages: s.prefs.preferredLanguages, completedLessons: s.completedLessons, challenges: s.challenges, guided: s.guided };
   const unlocked = ACHIEVEMENTS.filter((a) => s.achievements[a.id]);
   const locked = ACHIEVEMENTS.filter((a) => !s.achievements[a.id]);
 

@@ -9,14 +9,27 @@ import { inline } from '../../lib/markdown';
  * Runs a full HTML document in a sandboxed iframe (scripts allowed, but in an opaque
  * origin: no access to CodeVerse, its storage or cookies) and collects console output.
  */
-export function WebPreview({ doc, onLog, runKey }: { doc: string; onLog: (l: LogLine) => void; runKey: number }) {
+export function WebPreview({ doc, onLog, onStorage, runKey }: { doc: string; onLog: (l: LogLine) => void; onStorage?: (data: Record<string, string>) => void; runKey: number }) {
   const ref = useRef<HTMLIFrameElement>(null);
   const logRef = useRef(onLog);
   logRef.current = onLog;
+  const storageRef = useRef(onStorage);
+  storageRef.current = onStorage;
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
       if (e.source !== ref.current?.contentWindow || !e.data || e.data.__cv !== 1) return;
+      if (e.data.storage && typeof e.data.storage === 'object') {
+        const clean: Record<string, string> = {};
+        let size = 0;
+        for (const [k, v] of Object.entries(e.data.storage as Record<string, unknown>)) {
+          size += String(k).length + String(v).length;
+          if (size > 500_000) break; // cap per project
+          clean[String(k)] = String(v);
+        }
+        storageRef.current?.(clean);
+        return;
+      }
       const level = ['log', 'info', 'warn', 'error'].includes(e.data.level) ? e.data.level : 'log';
       logRef.current({ level, text: String(e.data.text).slice(0, 5000) });
     };

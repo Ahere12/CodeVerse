@@ -7,13 +7,15 @@ import { useToasts } from '../store/useToasts';
 import { CodeEditor } from '../components/code/CodeEditor';
 import { LogView, RunOutput, SqlOutput, WebPreview } from '../components/code/Outputs';
 import { useAuth } from '../store/useAuth';
-import { CONSOLE_SHIM, buildWebDocument, decodeShare, downloadText, encodeShare, fromTemplate, langOfFile, MAX_SHARE_LENGTH, newId, TEMPLATES } from '../lib/projects';
+import { CONSOLE_SHIM, storageShim, buildWebDocument, decodeShare, downloadText, encodeShare, fromTemplate, langOfFile, MAX_SHARE_LENGTH, newId, TEMPLATES } from '../lib/projects';
 import { runJs, type LogLine, type RunResult } from '../runtime/jsRunner';
 import { onPythonStatus, preloadPython, pythonStatus, runPython } from '../runtime/pyRunner';
 import { runSql, type SqlResult } from '../runtime/sqlRunner';
 import { useCodeTheme } from '../lib/hooks';
 
 const LAST_KEY = 'codeverse:lastProject';
+/** Per-project stand-in localStorage for previews (kept while this page is open). */
+const previewStorage = new Map<string, Record<string, string>>();
 const SPLIT_KEY = 'codeverse:playgroundSplit';
 const KIND_LABEL: Record<ProjectKind, string> = { web: 'HTML · CSS · JS', javascript: 'JavaScript', python: 'Python', sql: 'SQL' };
 const ALLOWED_EXT: Record<ProjectKind, RegExp> = { web: /\.(html|css|m?js)$/i, javascript: /\.m?js$/i, python: /\.py$/i, sql: /\.sql$/i };
@@ -45,6 +47,14 @@ export default function Playground() {
         } else push({ title: 'That share link is broken or incomplete', tone: 'critical' });
         history.replaceState(null, '', window.location.pathname);
       });
+      return;
+    }
+    const wanted = new URLSearchParams(window.location.search).get('open');
+    if (wanted && useAppStore.getState().projects[wanted]) {
+      setProject(useAppStore.getState().projects[wanted]);
+      // Remember it as the last project too, so a re-run of this effect opens the same one.
+      safeSet(LAST_KEY, wanted);
+      history.replaceState(null, '', window.location.pathname);
       return;
     }
     const last = safeGet(LAST_KEY);
@@ -177,7 +187,7 @@ function Workspace({ project, setProject, unsaved, onSaveCopy, onOpenPicker }: {
   const run = useCallback(async () => {
     if (project.kind === 'web') {
       setWebLogs([]);
-      setWebDoc(buildWebDocument(project, CONSOLE_SHIM));
+      setWebDoc(buildWebDocument(project, storageShim(previewStorage.get(project.id) ?? {}) + CONSOLE_SHIM));
       setRunKey((k) => k + 1);
       return;
     }
@@ -312,7 +322,7 @@ function Workspace({ project, setProject, unsaved, onSaveCopy, onOpenPicker }: {
     if (project.kind === 'web') {
       return (
         <div className="pg-output-split">
-          <div style={{ flex: 1, minHeight: 0 }}>{webDoc && <WebPreview doc={webDoc} runKey={runKey} onLog={(l) => setWebLogs((x) => [...x.slice(-199), l])} />}</div>
+          <div style={{ flex: 1, minHeight: 0 }}>{webDoc && <WebPreview doc={webDoc} runKey={runKey} onLog={(l) => setWebLogs((x) => [...x.slice(-199), l])} onStorage={(d) => previewStorage.set(project.id, d)} />}</div>
           <div className="pg-console">
             <div className="preview-label">Console {webLogs.length > 0 && <button className="btn btn-ghost btn-sm" style={{ marginLeft: 'auto', height: 22 }} onClick={() => setWebLogs([])}>Clear</button>}</div>
             <div style={{ flex: 1, minHeight: 0 }}><LogView logs={webLogs} empty="console.log output from your page appears here." /></div>

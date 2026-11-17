@@ -44,7 +44,7 @@ export function Dashboard() {
   const continueTo = lastVisited ?? { title: firstLesson.title, path: lessonPath(startCourse.id, firstLesson.id) };
   const pathCourses = COURSES.slice(Math.max(0, COURSES.indexOf(startCourse)), COURSES.indexOf(startCourse) + 3);
 
-  const ctx = { xp, activity, onboarded: s.onboarded, preferredLanguages: prefs.preferredLanguages, completedLessons: s.completedLessons, challenges: s.challenges };
+  const ctx = { xp, activity, onboarded: s.onboarded, preferredLanguages: prefs.preferredLanguages, completedLessons: s.completedLessons, challenges: s.challenges, guided: s.guided };
   const unlocked = ACHIEVEMENTS.filter((a) => s.achievements[a.id]).sort((a, b) => s.achievements[b.id] - s.achievements[a.id]);
   const next = ACHIEVEMENTS.filter((a) => !s.achievements[a.id])
     .map((a) => ({ a, p: a.progress?.(ctx) ?? 0 }))

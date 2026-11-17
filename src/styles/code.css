@@ -378,3 +378,8 @@
 .tutor-input textarea { flex: 1; resize: none; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--bg-sunken); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); max-height: 160px; }
 .tutor-input textarea:focus { outline: none; border-color: var(--accent); }
 .tutor-foot { font-size: 11px; text-align: center; padding: 0 var(--sp-3) var(--sp-2); }
+
+/* ---------- Roadmap milestones ---------- */
+.milestone-head { display: flex; align-items: center; gap: var(--sp-3); width: 100%; padding: var(--sp-3) var(--sp-4); background: none; border: 0; cursor: pointer; text-align: left; color: var(--text); }
+.milestone-body { padding: 0 var(--sp-4) var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); }
+.milestone-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: var(--fs-sm); }

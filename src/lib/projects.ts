@@ -172,3 +172,32 @@ export const CONSOLE_SHIM = `<script>
   window.addEventListener('unhandledrejection', function (e) { send('error', ['Unhandled promise rejection: ' + (e.reason && e.reason.message || e.reason)]); });
 })();
 </` + `script>`;
+
+/**
+ * Previews run in an opaque-origin sandbox where the real localStorage throws.
+ * This shim gives each project its own private stand-in: reads/writes work, changes are
+ * posted to the parent (which keeps them per project), and the site's real storage —
+ * where login sessions live — is never reachable from learner code.
+ */
+export function storageShim(initial: Record<string, string>): string {
+  const data = JSON.stringify(initial).replace(/</g, '\u003c');
+  return `<script>
+(function () {
+  var map = new Map(Object.entries(${data}));
+  function sync() { try { parent.postMessage({ __cv: 1, storage: Object.fromEntries(map) }, '*'); } catch (e) {} }
+  function make(persist) {
+    var m = persist ? map : new Map();
+    return {
+      getItem: function (k) { k = String(k); return m.has(k) ? m.get(k) : null; },
+      setItem: function (k, v) { m.set(String(k), String(v)); if (persist) sync(); },
+      removeItem: function (k) { m.delete(String(k)); if (persist) sync(); },
+      clear: function () { m.clear(); if (persist) sync(); },
+      key: function (i) { return Array.from(m.keys())[i] ?? null; },
+      get length() { return m.size; }
+    };
+  }
+  try { Object.defineProperty(window, 'localStorage', { value: make(true), configurable: true }); } catch (e) {}
+  try { Object.defineProperty(window, 'sessionStorage', { value: make(false), configurable: true }); } catch (e) {}
+})();
+</` + `script>`;
+}

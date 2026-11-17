@@ -8,9 +8,11 @@ export interface AchievementContext {
   preferredLanguages: string[];
   completedLessons: Record<string, number>;
   challenges?: Record<string, { solvedAt?: number }>;
+  guided?: Record<string, { completedAt?: number }>;
 }
 
 const solvedCount = (c: AchievementContext) => Object.values(c.challenges ?? {}).filter((r) => r.solvedAt).length;
+const projectsBuilt = (c: AchievementContext) => Object.values(c.guided ?? {}).filter((g) => g.completedAt).length;
 const lessonCount = (c: AchievementContext) => Object.keys(c.completedLessons).length;
 const coursesDone = (c: AchievementContext) => COURSES.filter((co) => courseProgress(co, c.completedLessons).complete).length;
 
@@ -92,6 +94,21 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: 'Trophy',
     check: (c) => solvedCount(c) >= 10,
     progress: (c) => clamp(solvedCount(c) / 10),
+  },
+  {
+    id: 'first-project',
+    title: 'Builder',
+    description: 'Finish your first guided project.',
+    icon: 'Target',
+    check: (c) => projectsBuilt(c) >= 1,
+  },
+  {
+    id: 'three-projects',
+    title: 'Portfolio Ready',
+    description: 'Finish three guided projects.',
+    icon: 'Trophy',
+    check: (c) => projectsBuilt(c) >= 3,
+    progress: (c) => clamp(projectsBuilt(c) / 3),
   },
   {
     id: 'first-hour',

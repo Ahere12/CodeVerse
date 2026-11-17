@@ -41,20 +41,14 @@ export const NAV: NavGroup[] = [
       { to: '/learn', label: 'Learn', icon: GraduationCap, description: 'Start here: placement quiz, guided path and bookmarks.' },
       { to: '/languages', label: 'Languages', icon: Languages, description: '30 languages, what they are for, and where to start.' },
       { to: '/courses', label: 'Courses', icon: BookOpen, description: 'Interactive courses with graded exercises.' },
-      {
-        to: '/roadmaps', label: 'Roadmaps', icon: Map, description: 'Career paths with clickable milestones.', phase: 6,
-        planned: ['Frontend, Backend, Full-Stack, Data, AI/ML, DevOps and more', 'Clickable milestones with prerequisites', 'Progress tracking and next recommended step'],
-      },
+      { to: '/roadmaps', label: 'Roadmaps', icon: Map, description: 'Career paths with clickable milestones and progress.' },
     ],
   },
   {
     label: 'Practice',
     items: [
       { to: '/challenges', label: 'Challenges', icon: Swords, description: 'Daily challenge and practice problems with real tests.' },
-      {
-        to: '/projects', label: 'Projects', icon: FolderGit2, description: 'Guided real-world projects.', phase: 6,
-        planned: ['Portfolio, calculator, to-do app, quiz app, game and more', 'Starter files, step-by-step instructions and checklists', 'Live preview and saved progress'],
-      },
+      { to: '/projects', label: 'Projects', icon: FolderGit2, description: 'Guided real-world projects with starter files.' },
       { to: '/playground', label: 'Playground', icon: Code2, description: 'Multi-file editor: HTML/CSS/JS with live preview, Python and SQL.' },
     ],
   },

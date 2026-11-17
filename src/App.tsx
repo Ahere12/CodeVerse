@@ -14,6 +14,8 @@ import { NotFound } from './pages/NotFound';
 import { ErrorPage } from './pages/ErrorPage';
 import { Account } from './pages/Account';
 import { Challenges } from './pages/Challenges';
+import { Roadmaps, RoadmapDetail } from './pages/Roadmaps';
+import { GuidedProjects, GuidedProjectDetail } from './pages/GuidedProjects';
 import { ALL_NAV_ITEMS } from './lib/nav';
 
 // Code-heavy pages (CodeMirror + parsers) load on demand.
@@ -58,6 +60,10 @@ const router = createBrowserRouter([
       { path: 'account', element: <Account /> },
       { path: 'playground', element: lazyEl(<Playground />) },
       { path: 'challenges', element: <Challenges /> },
+      { path: 'roadmaps', element: <Roadmaps /> },
+      { path: 'roadmaps/:id', element: <RoadmapDetail /> },
+      { path: 'projects', element: <GuidedProjects /> },
+      { path: 'projects/:id', element: <GuidedProjectDetail /> },
       { path: 'challenges/:id', element: lazyEl(<ChallengePage />) },
       { path: 'glossary', element: <Glossary /> },
       ...inDevelopmentRoutes,

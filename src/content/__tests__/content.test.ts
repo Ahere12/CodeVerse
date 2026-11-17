@@ -114,3 +114,29 @@ describe('challenges', () => {
     }
   });
 });
+
+import { ROADMAPS } from '../roadmaps';
+import { GUIDED_PROJECTS } from '../guidedProjects';
+describe('roadmaps and projects', () => {
+  it('roadmap links point at things that exist', () => {
+    for (const r of ROADMAPS) {
+      expect(new Set(r.milestones.map((m) => m.id)).size, r.id).toBe(r.milestones.length);
+      for (const m of r.milestones) {
+        m.courses?.forEach((id) => expect(getCourse(id), `${r.id}/${m.id} course ${id}`).toBeDefined());
+        m.projects?.forEach((id) => expect(GUIDED_PROJECTS.some((p) => p.id === id), `${r.id}/${m.id} project ${id}`).toBe(true));
+        m.challenges?.forEach((id) => expect(CHALLENGES.some((c) => c.id === id), `${r.id}/${m.id} challenge ${id}`).toBe(true));
+        m.languages?.forEach((id) => expect(LANGUAGES.some((l) => l.id === id), `${r.id}/${m.id} language ${id}`).toBe(true));
+        m.external?.forEach((e) => expect(e.url).toMatch(/^https:\/\//));
+      }
+    }
+  });
+  it('guided projects have steps, an index.html, and a different finished version', () => {
+    for (const p of GUIDED_PROJECTS) {
+      expect(p.steps.length, p.id).toBeGreaterThan(2);
+      expect(p.starter.some((f) => f.name === 'index.html'), p.id).toBe(true);
+      expect(p.solution.some((f) => f.name === 'index.html'), p.id).toBe(true);
+      expect(JSON.stringify(p.solution), p.id).not.toBe(JSON.stringify(p.starter));
+      if (p.recommended) expect(getCourse(p.recommended), p.id).toBeDefined();
+    }
+  });
+});

@@ -30,6 +30,8 @@ export interface SyncedState {
   challenges?: Record<string, { solvedAt?: number; attempts: number; bestMs?: number }>;
   /** Saved playground projects keyed by id. */
   projects?: Record<string, { updatedAt: number } & Record<string, unknown>>;
+  roadmapChecks?: Record<string, number>;
+  guided?: Record<string, { steps: number[]; playgroundId?: string; startedAt: number; completedAt?: number }>;
 }
 
 const minTs = (a?: number, b?: number) => (a === undefined ? b : b === undefined ? a : Math.min(a, b));
@@ -83,6 +85,19 @@ export function mergeProgress(local: SyncedState, remote: SyncedState | null | u
   const projects: NonNullable<SyncedState['projects']> = { ...(remote.projects ?? {}) };
   for (const [id, p] of Object.entries(local.projects ?? {})) projects[id] = newest(p, projects[id] ?? null)!;
 
+  const guided: NonNullable<SyncedState['guided']> = { ...(remote.guided ?? {}) };
+  for (const [id, g] of Object.entries(local.guided ?? {})) {
+    const r = guided[id];
+    guided[id] = r
+      ? {
+          steps: [...new Set([...g.steps, ...r.steps])].sort((a, b) => a - b),
+          playgroundId: g.playgroundId ?? r.playgroundId,
+          startedAt: Math.min(g.startedAt, r.startedAt),
+          completedAt: minTs(g.completedAt, r.completedAt),
+        }
+      : g;
+  }
+
   return {
     prefs: local.onboarded ? local.prefs : { ...local.prefs, ...remote.prefs },
     xp: Math.max(local.xp ?? 0, remote.xp ?? 0, activityXp),
@@ -98,5 +113,7 @@ export function mergeProgress(local: SyncedState, remote: SyncedState | null | u
     placement: newest(local.placement, remote.placement),
     challenges,
     projects,
+    roadmapChecks: unionTimestamps(local.roadmapChecks, remote.roadmapChecks),
+    guided,
   };
 }
