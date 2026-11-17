@@ -42,6 +42,9 @@ export function Account() {
       ) : !user ? (
         <section className="panel stack" style={{ gap: 'var(--sp-4)' }}>
           <h2 style={{ fontSize: 'var(--fs-md)' }}>Sign in or create an account</h2>
+          <p className="muted" style={{ fontSize: 'var(--fs-sm)' }}>
+            CodeVerse saves your lessons, XP, projects and challenges to your account, so you can pick up on any device. Without signing in, progress lasts only until you close the tab.
+          </p>
           <div className="stack" style={{ gap: 'var(--sp-2)' }}>
             {PROVIDERS.filter((p) => enabledProviders.includes(p.id)).map((p) => (
               <button
@@ -63,7 +66,7 @@ export function Account() {
           {error && <p role="alert" style={{ color: 'var(--critical)', fontSize: 'var(--fs-sm)' }}><AlertTriangle size={14} /> {error}</p>}
           <p className="subtle row" style={{ fontSize: 'var(--fs-xs)', alignItems: 'flex-start' }}>
             <ShieldCheck size={14} aria-hidden style={{ flexShrink: 0, marginTop: 2 }} />
-            We only receive your name, avatar and email from the provider — never your password. Progress you’ve made on this device is merged into your account, nothing is lost.
+            We only receive your name, avatar and email from the provider — never your password. Anything you’ve done in this tab is added to your account. Signing out removes your progress from this device (it stays safe in your account).
           </p>
         </section>
       ) : (

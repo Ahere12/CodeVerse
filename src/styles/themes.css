@@ -46,7 +46,6 @@ h1, h2, h3, .stat-value, .brand-name {
   padding-top: var(--sp-4);
   border-top: 1px solid var(--border);
 }
-:root[data-style='book'] .brand-mark { border-radius: 0; font-family: var(--font-display); font-style: italic; font-size: 16px; }
 :root[data-style='book'] .progress { border-radius: 0; height: 4px; }
 :root[data-style='book'] .progress > span { border-radius: 0; }
 
@@ -75,7 +74,6 @@ h1, h2, h3, .stat-value, .brand-name {
   background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 8px);
 }
 :root[data-style='terminal'] .panel { box-shadow: none; }
-:root[data-style='terminal'] .brand-mark { border-radius: 0; }
 :root[data-style='terminal'] .switch { border-radius: 0; }
 :root[data-style='terminal'] .switch::after { border-radius: 0; }
 :root[data-style='terminal'] .quiz-letter { border-radius: 0; }
@@ -101,7 +99,6 @@ h1, h2, h3, .stat-value, .brand-name {
 :root[data-style='friendly'] .segmented { border-radius: 999px; }
 :root[data-style='friendly'] .segmented button { border-radius: 999px; }
 :root[data-style='friendly'] .quiz-option { border-radius: var(--r-md); }
-:root[data-style='friendly'] .brand-mark { border-radius: 10px; }
 /* Language tiles take their brand colour */
 :root[data-style='friendly'] .lang-tile {
   background: color-mix(in srgb, var(--brand, var(--accent)) 14%, var(--surface));

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { dayKey, emptyDay, type ActivityLog } from '../lib/progress';
+import { progressStorage } from '../lib/progressStorage';
 
 export type ThemePref = 'dark' | 'light' | 'system';
 export type DesignStyle = 'book' | 'terminal' | 'friendly';
@@ -104,6 +105,8 @@ interface AppState {
   /** Replaces all synced data (used by cloud sync after merging). */
   applySynced: (data: Partial<AppState>) => void;
   resetProgress: () => void;
+  /** Wipes everything saved on this device (used on sign-out). Keeps the look the learner chose. */
+  clearDevice: () => void;
   importState: (json: string) => { ok: true } | { ok: false; error: string };
 }
 
@@ -258,6 +261,16 @@ export const useAppStore = create<AppState>()(
 
       applySynced: (data) => set((s) => ({ ...data, prefs: { ...DEFAULT_PREFS, ...s.prefs, ...(data.prefs ?? {}) } })),
 
+      clearDevice: () => {
+        const { designStyle, theme, fontScale, reducedMotion } = get().prefs;
+        set({
+          prefs: { ...DEFAULT_PREFS, designStyle, theme, fontScale, reducedMotion },
+          xp: 0, activity: {}, lastVisited: null, onboarded: false, achievements: {}, completedLessons: {},
+          exercises: {}, drafts: {}, bookmarks: [], notes: {}, placement: null, challenges: {}, projects: {},
+        });
+        progressStorage.clearAll(STORAGE_KEY);
+      },
+
       resetProgress: () =>
         set({ xp: 0, activity: {}, lastVisited: null, achievements: {}, completedLessons: {}, exercises: {}, placement: null, challenges: {} }),
 
@@ -293,7 +306,7 @@ export const useAppStore = create<AppState>()(
     {
       name: STORAGE_KEY,
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => progressStorage),
       partialize: (s) => pickSynced(s),
       // Fill in any preference keys added after a learner's data was saved.
       merge: (persisted, current) => {

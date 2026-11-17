@@ -9,6 +9,8 @@ import { useAchievementWatcher, useApplyPreferences, useCloudSync, useStudyTimer
 import { profileOf, useAuth } from '../../store/useAuth';
 import { cloudConfigured } from '../../lib/supabase';
 import { CommandPalette } from './CommandPalette';
+import { LogoMark } from '../ui/Logo';
+import { GuestBanner } from './GuestBanner';
 
 export function AppShell() {
   useApplyPreferences();
@@ -56,8 +58,10 @@ export function AppShell() {
 
       <aside className="sidebar" aria-label="Main navigation">
         <div className="sidebar-brand">
-          <span className="brand-mark" aria-hidden>{'</>'}</span>
-          <span className="brand-name">CODEVERSE</span>
+          <NavLink to="/" className="brand-link" aria-label="CodeVerse home">
+            <span className="brand-mark" aria-hidden><LogoMark size={24} planet="var(--text)" /></span>
+            <span className="brand-name">Code<em>Verse</em></span>
+          </NavLink>
           <button className="icon-btn mobile-only" style={{ marginLeft: 'auto' }} onClick={() => setMobileOpen(false)} aria-label="Close menu">
             <X size={18} />
           </button>
@@ -125,6 +129,7 @@ export function AppShell() {
             </NavLink>
           )}
         </header>
+        <GuestBanner />
         <main id="main" className="content" tabIndex={-1} style={{ outline: 'none' }}>
           <Outlet />
         </main>

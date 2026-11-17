@@ -29,24 +29,24 @@
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
+.brand-link { display: flex; align-items: center; gap: var(--sp-3); min-width: 0; }
 .brand-mark {
   display: grid;
   place-items: center;
   width: 28px;
   height: 28px;
-  border-radius: var(--r-md);
-  background: var(--accent);
-  color: var(--text-on-accent);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 13px;
+  color: var(--accent);
   flex-shrink: 0;
 }
 .brand-name {
   font-weight: 700;
-  letter-spacing: 0.04em;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-md);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
+.brand-name em { font-style: normal; color: var(--accent); }
+:root[data-style='book'] .brand-name { font-weight: 500; font-size: 1.15rem; }
+:root[data-style='book'] .brand-name em { font-style: italic; }
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
@@ -287,3 +287,13 @@
   display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: var(--fs-sm);
 }
 .avatar-dot { position: absolute; right: -2px; top: -2px; width: 9px; height: 9px; border-radius: 50%; background: var(--warning); border: 2px solid var(--bg); }
+
+.guest-banner {
+  display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
+  padding: 8px var(--sp-5);
+  background: var(--warning-soft);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-sm);
+}
+.guest-banner svg { color: var(--warning); flex-shrink: 0; }
+.guest-banner span { flex: 1; min-width: 200px; }

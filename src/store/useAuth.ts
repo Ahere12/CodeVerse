@@ -58,7 +58,10 @@ export const useAuth = create<AuthState>()((set, get) => ({
       const wasSignedIn = !!get().user;
       set({ session, user: session?.user ?? null, ready: true });
       if (event === 'SIGNED_IN' && !wasSignedIn) get().syncNow();
-      if (event === 'SIGNED_OUT') set({ sync: 'idle', lastSyncedAt: null });
+      if (event === 'SIGNED_OUT') {
+        set({ sync: 'idle', lastSyncedAt: null });
+        useAppStore.getState().clearDevice();
+      }
     });
     return () => data.subscription.unsubscribe();
   },
@@ -78,6 +81,8 @@ export const useAuth = create<AuthState>()((set, get) => ({
     if (!opts?.skipSync) await get().syncNow();
     await supabase.auth.signOut();
     set({ session: null, user: null, sync: 'idle' });
+    // Progress is only kept for signed-in learners: remove it from this device.
+    useAppStore.getState().clearDevice();
   },
 
   syncNow: async () => {
@@ -101,6 +106,10 @@ export const useAuth = create<AuthState>()((set, get) => ({
           .upsert({ user_id: user.id, data: merged, updated_at: new Date().toISOString() });
         if (upErr) throw upErr;
       }
+      // Make sure the merged progress is written to this device's saved storage now that we're signed in.
+      applying = true;
+      useAppStore.setState({});
+      applying = false;
       set({ sync: 'synced', lastSyncedAt: Date.now() });
     } catch (e) {
       applying = false;
