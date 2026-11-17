@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-style="book">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="CodeVerse — learn to code from zero, with interactive lessons, a browser editor and an AI tutor." />
+    <meta name="theme-color" content="#0b0d10" />
+    <title>CodeVerse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      // Apply saved theme before first paint to avoid a light/dark flash.
+      try {
+        var p = (JSON.parse(localStorage.getItem('codeverse:state')) || {}).state?.prefs || {};
+        var t = p.theme === 'system' || !p.theme
+          ? (p.theme === 'system' && !matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark')
+          : p.theme;
+        document.documentElement.dataset.theme = t;
+        if (p.designStyle) document.documentElement.dataset.style = p.designStyle;
+        if (p.fontScale) document.documentElement.dataset.fontScale = p.fontScale;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

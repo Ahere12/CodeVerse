@@ -1,0 +1,110 @@
+/*
+ * Structural differences between design styles — things tokens alone can't express.
+ * Loaded last so it can refine component styles.
+ */
+
+h1, h2, h3, .stat-value, .brand-name {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  letter-spacing: var(--heading-tracking);
+}
+.eyebrow, .nav-group-label, .stat-label, .palette-section, .preview-label {
+  text-transform: var(--label-transform);
+  letter-spacing: var(--label-tracking);
+}
+
+/* ======================= BOOK ======================= */
+:root[data-style='book'] h1 { font-size: calc(var(--fs-2xl) * 1.05); line-height: 1.12; }
+:root[data-style='book'] .page-header {
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--border);
+}
+:root[data-style='book'] .eyebrow {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+:root[data-style='book'] .nav-group-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+:root[data-style='book'] .nav-group-label::before { content: '§ '; color: var(--accent); font-style: normal; }
+:root[data-style='book'] .panel { box-shadow: none; }
+:root[data-style='book'] .panel-header h2 { font-size: var(--fs-lg); }
+:root[data-style='book'] .nav-link.active::before { left: auto; right: -8px; border-radius: 0; }
+:root[data-style='book'] .btn-primary { letter-spacing: 0.01em; }
+:root[data-style='book'] .lesson-blocks .prose { font-size: 1.04rem; line-height: 1.75; }
+:root[data-style='book'] .lesson-h2 {
+  font-size: var(--fs-xl);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+}
+:root[data-style='book'] .brand-mark { border-radius: 0; font-family: var(--font-display); font-style: italic; font-size: 16px; }
+:root[data-style='book'] .progress { border-radius: 0; height: 4px; }
+:root[data-style='book'] .progress > span { border-radius: 0; }
+
+/* ===================== TERMINAL ===================== */
+:root[data-style='terminal'] body { font-feature-settings: 'calt' 0; }
+:root[data-style='terminal'] h1 { font-size: var(--fs-xl); }
+:root[data-style='terminal'] h1::before { content: '# '; color: var(--accent); }
+:root[data-style='terminal'] .panel-header h2::before,
+:root[data-style='terminal'] .lesson-h2::before { content: '## '; color: var(--text-3); }
+:root[data-style='terminal'] .eyebrow::before { content: '// '; }
+:root[data-style='terminal'] .nav-link.active::before { display: none; }
+:root[data-style='terminal'] .nav-link.active .nav-label::before { content: '> '; color: var(--accent); }
+:root[data-style='terminal'] .nav-link.active { background: var(--accent-soft); color: var(--accent); }
+:root[data-style='terminal'] .btn {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+:root[data-style='terminal'] .btn-primary::before { content: '['; opacity: 0.7; }
+:root[data-style='terminal'] .btn-primary::after { content: ']'; opacity: 0.7; }
+:root[data-style='terminal'] .badge { text-transform: uppercase; letter-spacing: 0.05em; font-size: 10.5px; }
+:root[data-style='terminal'] .progress { height: 8px; background: repeating-linear-gradient(90deg, var(--surface-3) 0 6px, transparent 6px 8px); border-radius: 0; }
+:root[data-style='terminal'] .progress > span {
+  border-radius: 0;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 8px);
+}
+:root[data-style='terminal'] .panel { box-shadow: none; }
+:root[data-style='terminal'] .brand-mark { border-radius: 0; }
+:root[data-style='terminal'] .switch { border-radius: 0; }
+:root[data-style='terminal'] .switch::after { border-radius: 0; }
+:root[data-style='terminal'] .quiz-letter { border-radius: 0; }
+:root[data-style='terminal'] .topbar { backdrop-filter: none; background: var(--bg); }
+
+/* ===================== FRIENDLY ===================== */
+:root[data-style='friendly'] h1 { font-size: calc(var(--fs-2xl) * 1.05); }
+:root[data-style='friendly'] .panel {
+  border-color: transparent;
+  box-shadow: var(--shadow-1);
+}
+:root[data-style='friendly'][data-theme='dark'] .panel { border-color: var(--border); }
+:root[data-style='friendly'] .btn { border-radius: 999px; padding: 0 var(--sp-5); }
+:root[data-style='friendly'] .btn-sm { padding: 0 var(--sp-3); }
+:root[data-style='friendly'] .icon-btn { border-radius: 999px; }
+:root[data-style='friendly'] .badge { border-radius: 999px; padding: 0 10px; }
+:root[data-style='friendly'] .nav-link { border-radius: 999px; }
+:root[data-style='friendly'] .nav-link.active { background: var(--accent-soft); color: var(--accent); }
+:root[data-style='friendly'] .nav-link.active::before { display: none; }
+:root[data-style='friendly'] .sidebar { background: var(--surface); }
+:root[data-style='friendly'] .eyebrow { color: var(--accent); font-weight: 700; }
+:root[data-style='friendly'] .search-trigger { border-radius: 999px; }
+:root[data-style='friendly'] .segmented { border-radius: 999px; }
+:root[data-style='friendly'] .segmented button { border-radius: 999px; }
+:root[data-style='friendly'] .quiz-option { border-radius: var(--r-md); }
+:root[data-style='friendly'] .brand-mark { border-radius: 10px; }
+/* Language tiles take their brand colour */
+:root[data-style='friendly'] .lang-tile {
+  background: color-mix(in srgb, var(--brand, var(--accent)) 14%, var(--surface));
+  border-color: transparent;
+}
+:root[data-style='friendly'] .lang-card { border-top: 3px solid var(--brand, transparent); }

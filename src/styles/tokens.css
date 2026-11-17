@@ -1,0 +1,248 @@
+/*
+ * CodeVerse design tokens.
+ *
+ * Two independent switches on <html>:
+ *   data-style  = book | terminal | friendly   (the design language)
+ *   data-theme  = dark | light                  (the colour mode)
+ * Each style defines its own palette for both modes, plus fonts and shape.
+ * Components only ever use these variables.
+ */
+
+/* ---------- Shared, style-independent ---------- */
+:root {
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: 2.125rem;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+
+  --sidebar-w: 240px;
+  --sidebar-w-collapsed: 64px;
+  --topbar-h: 56px;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 160ms;
+  --glow: none;
+}
+
+/* ======================================================================
+   BOOK — a well-made programming book crossed with an editor.
+   Serif display, hairline rules, square corners, warm paper and ink.
+   ====================================================================== */
+:root,
+:root[data-style='book'] {
+  --font-display: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --heading-weight: 500;
+  --heading-tracking: -0.01em;
+  --r-sm: 0px;
+  --r-md: 2px;
+  --r-lg: 2px;
+  --label-transform: none;
+  --label-tracking: 0.04em;
+}
+:root[data-theme='dark'],
+:root[data-style='book'][data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #151311;
+  --bg-sunken: #100f0d;
+  --surface: #1b1916;
+  --surface-2: #221f1b;
+  --surface-3: #2b2722;
+  --border: #322e28;
+  --border-strong: #463f36;
+  --text: #ece6da;
+  --text-2: #bab1a2;
+  --text-3: #877e70;
+  --text-on-accent: #1a0d06;
+  --accent: #e2875a;
+  --accent-hover: #eb9c74;
+  --accent-soft: rgba(226, 135, 90, 0.13);
+  --accent-ring: rgba(226, 135, 90, 0.5);
+  --shadow-1: none;
+  --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+:root[data-style='book'][data-theme='light'] {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --bg-sunken: #ece7dc;
+  --surface: #fbf9f4;
+  --surface-2: #f2eee5;
+  --surface-3: #e7e1d4;
+  --border: #ddd4c4;
+  --border-strong: #c6bba6;
+  --text: #1c1a16;
+  --text-2: #4e483e;
+  --text-3: #7e7567;
+  --text-on-accent: #ffffff;
+  --accent: #b0502a;
+  --accent-hover: #963f1d;
+  --accent-soft: rgba(176, 80, 42, 0.1);
+  --accent-ring: rgba(176, 80, 42, 0.45);
+  --shadow-1: none;
+  --shadow-2: 0 10px 30px rgba(60, 40, 20, 0.14);
+}
+
+/* ======================================================================
+   TERMINAL — a developer tool. Monospace everything, sharp boxes, amber.
+   ====================================================================== */
+:root[data-style='terminal'] {
+  --font-display: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --font-sans: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --heading-weight: 700;
+  --heading-tracking: -0.02em;
+  --r-sm: 0px;
+  --r-md: 0px;
+  --r-lg: 0px;
+  --label-transform: uppercase;
+  --label-tracking: 0.1em;
+  --fs-base: 0.875rem;
+}
+:root[data-style='terminal'][data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0a0a;
+  --bg-sunken: #050505;
+  --surface: #101010;
+  --surface-2: #161616;
+  --surface-3: #1f1f1f;
+  --border: #262626;
+  --border-strong: #3b3b3b;
+  --text: #e8e8e3;
+  --text-2: #a8a8a0;
+  --text-3: #6f6f68;
+  --text-on-accent: #140e00;
+  --accent: #ffb000;
+  --accent-hover: #ffc13d;
+  --accent-soft: rgba(255, 176, 0, 0.12);
+  --accent-ring: rgba(255, 176, 0, 0.5);
+  --shadow-1: none;
+  --shadow-2: 0 0 0 1px #3b3b3b;
+}
+:root[data-style='terminal'][data-theme='light'] {
+  color-scheme: light;
+  --bg: #f3f2ec;
+  --bg-sunken: #e9e7df;
+  --surface: #fbfaf6;
+  --surface-2: #efede6;
+  --surface-3: #e3e0d7;
+  --border: #d3cfc3;
+  --border-strong: #a9a597;
+  --text: #121210;
+  --text-2: #45443e;
+  --text-3: #777469;
+  --text-on-accent: #ffffff;
+  --accent: #9a5b00;
+  --accent-hover: #7d4900;
+  --accent-soft: rgba(154, 91, 0, 0.1);
+  --accent-ring: rgba(154, 91, 0, 0.45);
+  --shadow-1: none;
+  --shadow-2: 0 0 0 1px #a9a597;
+}
+
+/* ======================================================================
+   FRIENDLY — bright, clean and colourful, never childish.
+   Bold grotesque headings, rounded shapes, brand colour per language.
+   ====================================================================== */
+:root[data-style='friendly'] {
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --heading-weight: 700;
+  --heading-tracking: -0.025em;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --label-transform: none;
+  --label-tracking: 0.01em;
+}
+:root[data-style='friendly'][data-theme='light'] {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --bg-sunken: #eef0f6;
+  --surface: #ffffff;
+  --surface-2: #f4f6fb;
+  --surface-3: #e9ecf5;
+  --border: #e4e7f0;
+  --border-strong: #cdd3e1;
+  --text: #161a2c;
+  --text-2: #4b5270;
+  --text-3: #7f86a0;
+  --text-on-accent: #ffffff;
+  --accent: #e8552a;
+  --accent-hover: #cf4419;
+  --accent-soft: rgba(232, 85, 42, 0.1);
+  --accent-ring: rgba(232, 85, 42, 0.4);
+  --shadow-1: 0 1px 2px rgba(22, 26, 44, 0.06), 0 2px 8px rgba(22, 26, 44, 0.04);
+  --shadow-2: 0 12px 32px rgba(22, 26, 44, 0.14);
+}
+:root[data-style='friendly'][data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #12141c;
+  --bg-sunken: #0d0f15;
+  --surface: #1a1d28;
+  --surface-2: #212534;
+  --surface-3: #2a2f40;
+  --border: #2c3142;
+  --border-strong: #3d4459;
+  --text: #eef0f7;
+  --text-2: #b4b9cc;
+  --text-3: #80869c;
+  --text-on-accent: #ffffff;
+  --accent: #ff7148;
+  --accent-hover: #ff8a66;
+  --accent-soft: rgba(255, 113, 72, 0.14);
+  --accent-ring: rgba(255, 113, 72, 0.45);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Status colours (shared, per mode) ---------- */
+:root,
+:root[data-theme='dark'] {
+  --good: #4cc38a;
+  --warning: #e8b04b;
+  --critical: #ef7a72;
+  --info: #72aef0;
+  --warning-soft: rgba(232, 176, 75, 0.13);
+  --critical-soft: rgba(239, 122, 114, 0.13);
+  --info-soft: rgba(114, 174, 240, 0.13);
+  --good-soft: rgba(76, 195, 138, 0.13);
+  --beginner: #4cc38a;
+  --intermediate: #72aef0;
+  --advanced: #c39bf0;
+}
+:root[data-theme='light'] {
+  --good: #1a8a55;
+  --warning: #a8670d;
+  --critical: #c8392f;
+  --info: #2a62bd;
+  --warning-soft: rgba(168, 103, 13, 0.1);
+  --critical-soft: rgba(200, 57, 47, 0.1);
+  --info-soft: rgba(42, 98, 189, 0.1);
+  --good-soft: rgba(26, 138, 85, 0.1);
+  --beginner: #1a8a55;
+  --intermediate: #2a62bd;
+  --advanced: #7646c4;
+}
+
+/* ---------- Motion & text size ---------- */
+:root[data-reduced-motion='true'] { --dur: 0ms; }
+@media (prefers-reduced-motion: reduce) { :root { --dur: 0ms; } }
+
+:root[data-font-scale='sm'] { font-size: 15px; }
+:root[data-font-scale='md'] { font-size: 16px; }
+:root[data-font-scale='lg'] { font-size: 17.5px; }
+:root[data-font-scale='xl'] { font-size: 19px; }
