@@ -12,6 +12,7 @@ import {
   Settings,
   Swords,
   User,
+  Wrench,
   UserCircle,
   Users,
 } from 'lucide-react';
@@ -55,10 +56,8 @@ export const NAV: NavGroup[] = [
   {
     label: 'Reference',
     items: [
-      {
-        to: '/docs', label: 'Documentation', icon: FileText, description: 'Searchable references, cheat sheets and glossary.', phase: 7,
-        planned: ['Syntax references and built-ins', 'Cheat sheets and common patterns', 'Glossary of programming terms', 'Developer tools: JSON, regex, Markdown'],
-      },
+      { to: '/docs', label: 'Documentation', icon: FileText, description: 'Quick references with runnable examples.' },
+      { to: '/tools', label: 'Tools', icon: Wrench, description: 'JSON formatter, regex tester, contrast checker, encoders.' },
       {
         to: '/community', label: 'Community', icon: Users, description: 'Share projects and ask questions.', phase: 7,
         planned: ['Requires accounts and a backend — opt-in only', 'Project gallery, Q&A and feedback', 'Reporting and moderation'],

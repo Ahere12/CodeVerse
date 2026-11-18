@@ -140,3 +140,15 @@ describe('roadmaps and projects', () => {
     }
   });
 });
+
+import { DOCS } from '../docs';
+describe('docs', () => {
+  it('have unique ids, examples and valid lesson links', () => {
+    expect(new Set(DOCS.map((e) => e.id)).size).toBe(DOCS.length);
+    const lessonPaths = new Set(ALL_LESSONS.map(({ course, lesson }) => `/courses/${course.id}/${lesson.id}`));
+    for (const e of DOCS) {
+      expect(e.example.trim().length, e.id).toBeGreaterThan(0);
+      if (e.lesson) expect(lessonPaths.has(e.lesson), `${e.id} -> ${e.lesson}`).toBe(true);
+    }
+  });
+});

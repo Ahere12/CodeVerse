@@ -308,3 +308,7 @@
   .search-trigger span { display: none; }
   .topbar .spacer { flex: 1; }
 }
+@media (max-width: 560px) {
+  .topbar .btn .xp-text { display: none; }
+  .topbar .btn { padding: 0 var(--sp-2); }
+}

@@ -24,6 +24,8 @@ const Learn = lazy(() => import('./pages/Learn').then((m) => ({ default: m.Learn
 const ContentCheck = lazy(() => import('./pages/ContentCheck'));
 const Playground = lazy(() => import('./pages/Playground'));
 const ChallengePage = lazy(() => import('./pages/ChallengePage'));
+const Docs = lazy(() => import('./pages/Docs'));
+const Tools = lazy(() => import('./pages/Tools'));
 
 function Loading() {
   return (
@@ -60,6 +62,8 @@ const router = createBrowserRouter([
       { path: 'account', element: <Account /> },
       { path: 'playground', element: lazyEl(<Playground />) },
       { path: 'challenges', element: <Challenges /> },
+      { path: 'docs', element: lazyEl(<Docs />) },
+      { path: 'tools', element: lazyEl(<Tools />) },
       { path: 'roadmaps', element: <Roadmaps /> },
       { path: 'roadmaps/:id', element: <RoadmapDetail /> },
       { path: 'projects', element: <GuidedProjects /> },
