@@ -297,3 +297,14 @@
 }
 .guest-banner svg { color: var(--warning); flex-shrink: 0; }
 .guest-banner span { flex: 1; min-width: 200px; }
+
+/* Top bar must always fit: the search box gives up space first. */
+.topbar > * { flex-shrink: 0; }
+.topbar .search-trigger { flex: 1 1 auto; min-width: 0; flex-shrink: 1; }
+.search-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 560px) {
+  .topbar { gap: var(--sp-2); }
+  .topbar .search-trigger { flex: 0 0 auto; width: 34px; padding: 0; justify-content: center; }
+  .search-trigger span { display: none; }
+  .topbar .spacer { flex: 1; }
+}

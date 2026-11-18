@@ -353,3 +353,18 @@ a.list-item:hover .list-title { color: var(--accent); }
   border-color: var(--border-strong);
   background: var(--surface-2);
 }
+
+/* Narrow screens: segmented filters scroll instead of overflowing; long buttons wrap. */
+.segmented { max-width: 100%; overflow-x: auto; }
+.segmented button { flex-shrink: 0; }
+.btn { max-width: 100%; }
+@media (max-width: 480px) {
+  .page-header .btn, .panel .btn-primary, .btn-lg {
+    white-space: normal;
+    height: auto;
+    min-height: 36px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-align: center;
+  }
+}

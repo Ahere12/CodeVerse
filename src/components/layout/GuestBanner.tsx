@@ -5,9 +5,18 @@ import { useAuth } from '../../store/useAuth';
 
 /** Reminds guests that progress is only kept for signed-in learners. */
 export function GuestBanner() {
-  const { ready, user } = useAuth();
+  const { ready, user, error } = useAuth();
   const { pathname } = useLocation();
   if (!cloudConfigured || !ready || user || pathname === '/account') return null;
+  if (error) {
+    return (
+      <div className="guest-banner" role="alert">
+        <CloudOff size={15} aria-hidden />
+        <span>{error}</span>
+        <Link to="/account" className="btn btn-sm btn-primary">Try again</Link>
+      </div>
+    );
+  }
   return (
     <div className="guest-banner" role="status">
       <CloudOff size={15} aria-hidden />

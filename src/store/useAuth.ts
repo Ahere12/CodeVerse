@@ -50,9 +50,24 @@ export const useAuth = create<AuthState>()((set, get) => ({
 
   init: () => {
     if (!supabase) return () => {};
+    // Errors from the provider or Supabase come back in the URL (query or hash). Surface them
+    // instead of failing silently, then tidy the address bar.
+    const params = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const urlError = params.get('error_description') ?? hash.get('error_description') ?? params.get('error') ?? hash.get('error');
+    const hadCode = params.has('code');
+    if (urlError) {
+      set({ error: `Sign-in didn’t complete: ${urlError.replace(/\+/g, ' ')}` });
+      window.history.replaceState(null, '', window.location.pathname);
+    }
     supabase.auth.getSession().then(({ data }) => {
       set({ session: data.session, user: data.session?.user ?? null, ready: true });
       if (data.session) get().syncNow();
+      else if (hadCode && !urlError) {
+        // The sign-in code arrived but couldn't be used, usually because sign-in was started on a
+        // different address (e.g. localhost vs the live site) than the one it returned to.
+        set({ error: 'Sign-in couldn’t be completed on this address. Start and finish signing in on the same site, then try again.' });
+      }
     });
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       const wasSignedIn = !!get().user;

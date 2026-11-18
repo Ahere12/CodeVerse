@@ -46,7 +46,12 @@ export const progressStorage = {
       }
       return v;
     }, null),
-  setItem: (key: string, value: string) => safe(() => pick().setItem(key, value), undefined),
+  setItem: (key: string, value: string) =>
+    safe(() => {
+      pick().setItem(key, value);
+      // Once progress is saved for a signed-in learner, the guest copy in this tab is obsolete.
+      if (savesProgress()) sessionStorage.removeItem(key);
+    }, undefined),
   removeItem: (key: string) => safe(() => pick().removeItem(key), undefined),
   clearAll: (key: string) =>
     safe(() => {

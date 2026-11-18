@@ -13,7 +13,8 @@
     <script>
       // Apply saved theme before first paint to avoid a light/dark flash.
       try {
-        var p = (JSON.parse(localStorage.getItem('codeverse:state')) || {}).state?.prefs || {};
+        var raw = sessionStorage.getItem('codeverse:state') || localStorage.getItem('codeverse:state');
+        var p = (JSON.parse(raw) || {}).state?.prefs || {};
         var t = p.theme === 'system' || !p.theme
           ? (p.theme === 'system' && !matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark')
           : p.theme;
